@@ -1,28 +1,27 @@
 model Rental {
-    id        String @id @default(uuid())
-    tenant_id String
-    tenant    User   @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
+  id        String @id @default(uuid())
+  tenant_id String
+  tenant    User   @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
 
-    // property
-    property_id String
-    property Property @relation(fields: [property_id],references: [id],onDelete: Cascade)
+  // property
+  property_id String
+  property    Property @relation(fields: [property_id], references: [id], onDelete: Cascade)
 
-    move_in_date DateTime
-    message String
-    status RentalStatus @default(PENDING)
-    
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  move_in_date DateTime
+  message      String
+  status       RentalStatus @default(PENDING)
 
-    // Relations
-    payments Payment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    @@map("rental-requests")
+  // Relations
+  payments Payment[]
+
+  @@map("rental-requests")
 }
 
-
 enum RentalStatus {
-    PENDING
-    APPROVED
-    CANCELLED
+  PENDING
+  APPROVED
+  CANCELLED
 }

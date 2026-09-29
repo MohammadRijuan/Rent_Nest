@@ -1,5 +1,4 @@
 model User {
-
   id String @id @default(uuid())
 
   name         String
@@ -9,9 +8,10 @@ model User {
   role         Role         @default(TENANT)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @default(now())
-  
-  //   profileId    Profile?
 
+  profile Profile?
+
+  //   profileId    Profile?
 
   // connecting comment model
   //   comments     Comment[]
@@ -19,11 +19,10 @@ model User {
   //   posts        Post[]
   //   subscription Subscription?
 
-
   // relations
   properties Property[]
-  rentals Rental[]
-  reviews Reviews[]
+  rentals    Rental[]
+  reviews    Reviews[]
 
   // rename table
   @@map("users")

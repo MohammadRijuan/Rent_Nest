@@ -1,33 +1,30 @@
 model Payment {
-    id String @id @default(uuid())
+  id String @id @default(uuid())
 
-    rental_id String
-    rental Rental @relation(fields: [rental_id],references: [id],onDelete: Cascade)
+  rental_id String
+  rental    Rental @relation(fields: [rental_id], references: [id], onDelete: Cascade)
 
-    transaction String
+  transaction String
 
-    amount Decimal @db.Decimal(10,2)
+  amount Decimal @db.Decimal(10, 2)
 
-    method Methods @default(STRIPE)
+  method Methods @default(STRIPE)
 
-    status PaymentStatus @default(PENDING)
+  status PaymentStatus @default(PENDING)
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-
-    @@map("payments")
+  @@map("payments")
 }
-
 
 enum PaymentStatus {
-    PENDING
-    SUCCESS
-    FAILED
+  PENDING
+  SUCCESS
+  FAILED
 }
 
-
 enum Methods {
-    STRIPE
-    BKASH
+  STRIPE
+  BKASH
 }

@@ -1,10 +1,13 @@
 import express, {type Application, type Request, type Response } from "express";
 import cors from "cors"
 import config from "./config";
+import cookieParser from "cookie-parser";
+import { authRoutes } from "./modules/auth/auth.route";
 
 
 
 const app : Application = express();
+
 
 // using cors so that deployment url can take it automatically
 app.use(cors({
@@ -12,6 +15,16 @@ app.use(cors({
     credentials: true,
 })
 );
+
+
+// middlewares
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+app.use(cookieParser())
+
+
+// all api
+app.use("/api/auth",authRoutes)
 
 
 app.use("/",(req:Request,res:Response)=>{
