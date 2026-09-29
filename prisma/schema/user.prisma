@@ -1,19 +1,29 @@
 model User {
-  id           String       @id @default(uuid())
 
+  id String @id @default(uuid())
+
+  name         String
   email        String       @unique
   password     String
   activeStatus ActiveStatus @default(ACTIVE)
-  role         Role         @default(USER)
+  role         Role         @default(TENANT)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @default(now())
-//   profileId    Profile?
+  
+  //   profileId    Profile?
+
 
   // connecting comment model
-//   comments     Comment[]
+  //   comments     Comment[]
   // connecting post model
-//   posts        Post[]
-//   subscription Subscription?
+  //   posts        Post[]
+  //   subscription Subscription?
+
+
+  // relations
+  properties Property[]
+  rentals Rental[]
+  reviews Reviews[]
 
   // rename table
   @@map("users")
@@ -25,7 +35,7 @@ enum ActiveStatus {
 }
 
 enum Role {
-  USER
-  AUTHOR
+  TENANT
+  LANDLORD
   ADMIN
 }
