@@ -10,7 +10,8 @@ import type { JwtPayload, SignOptions } from "jsonwebtoken";
 
 
 const registerUserService = async (payload: RegisterUserPayload) => {
-  const { name, email, password, profilePhoto } = payload;
+  
+  const { name, email, password,role, profilePhoto } = payload;
 
   const isUserExist = await prisma.user.findUnique({
     where: {
@@ -34,6 +35,8 @@ const registerUserService = async (payload: RegisterUserPayload) => {
       name,
       email,
       password : hashedPassword,
+      role,
+
       profile: {
         create: {
           profilePhoto: profilePhoto ?? null,
@@ -60,6 +63,7 @@ const registerUserService = async (payload: RegisterUserPayload) => {
   });
 
   return user;
+
 };
 
 
@@ -122,6 +126,7 @@ const loginUserService = async(payload:ILoginUserPayload) => {
 
 
 const refreshToken = async(refreshToken:string)=>{
+  
 
   const verifiedRefreshToken = jwtUtils.verifyToken(refreshToken,config.jwt_refresh_secret)
 
@@ -159,6 +164,7 @@ const refreshToken = async(refreshToken:string)=>{
     config.jwt_access_secret,
     config.jwt_access_expires_in as SignOptions
   )
+  
 
 
   return {

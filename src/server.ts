@@ -14,7 +14,6 @@ async function main () {
 
         app.listen(PORT,()=>{
             console.log(`Rent Nest is running on server : ${PORT}`)
-
         })
         
     } catch (error) {

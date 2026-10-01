@@ -4,7 +4,7 @@ import { catchAsync } from "../../utils/catchAsync"
 import { sendResponse } from "../../utils/sendResponse"
 import httpStatus from "http-status"
 
-const registerUser = catchAsync(async(req:Request,res:Response,mext : NextFunction) =>{
+const registerUser = catchAsync(async(req:Request,res:Response,next : NextFunction) =>{
 
     const payload = req.body
     const user = await authServices.registerUserService(payload)
@@ -29,9 +29,17 @@ const loginUser = catchAsync(async(req:Request,res:Response,next : NextFunction)
     res.cookie("accessToken",accessToken,{
         httpOnly:true,
         secure:false,
-        sameSite:"none",
+        sameSite:"lax",
         maxAge: 1000 * 60 * 60 * 24
     })
+
+    res.cookie("refreshToken",refreshToken,{
+        httpOnly:true,
+        secure:false,
+        sameSite:"lax",
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    })
+    
 
 
     sendResponse(res,{

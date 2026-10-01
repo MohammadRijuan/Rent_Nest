@@ -3,6 +3,10 @@ import cors from "cors"
 import config from "./config";
 import cookieParser from "cookie-parser";
 import { authRoutes } from "./modules/auth/auth.route";
+import { landlordRoutes } from "./modules/landlord/landlord.route";
+import { categoryRoutes } from "./modules/category/category.route";
+import { getAllRoutes } from "./modules/getAll/getAll.route";
+import { adminRoutes } from "./modules/admin/admin.route";
 
 
 
@@ -25,6 +29,15 @@ app.use(cookieParser())
 
 // all api
 app.use("/api/auth",authRoutes)
+
+app.use("/api/landlord",landlordRoutes)
+
+app.use("/api/category",categoryRoutes)
+
+app.use("/api/admin",adminRoutes)
+
+
+app.use("/api",getAllRoutes)
 
 
 app.use("/",(req:Request,res:Response)=>{
