@@ -16,5 +16,7 @@ router.post("/rentals",authMiddleware(Role.TENANT), getAllControllers.createRent
 
 router.get("/rentals", getAllControllers.getRentals)
 
+router.post("/reviews",authMiddleware(Role.TENANT), getAllControllers.createReview)
+
 
 export const getAllRoutes = router

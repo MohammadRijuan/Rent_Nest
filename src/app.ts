@@ -7,6 +7,7 @@ import { landlordRoutes } from "./modules/landlord/landlord.route";
 import { categoryRoutes } from "./modules/category/category.route";
 import { getAllRoutes } from "./modules/getAll/getAll.route";
 import { adminRoutes } from "./modules/admin/admin.route";
+import { getPaymentRoutes } from "./modules/payments/payment.route";
 
 
 
@@ -36,8 +37,9 @@ app.use("/api/category",categoryRoutes)
 
 app.use("/api/admin",adminRoutes)
 
-
 app.use("/api",getAllRoutes)
+
+app.use("/api/payments",getPaymentRoutes)
 
 
 app.use("/",(req:Request,res:Response)=>{

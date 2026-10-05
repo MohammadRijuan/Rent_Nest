@@ -1,16 +1,15 @@
 model Payment {
-  id String @id @default(uuid())
-
+  id        String @id @default(uuid())
   rental_id String
   rental    Rental @relation(fields: [rental_id], references: [id], onDelete: Cascade)
 
-  transaction String
+  tenant_id String
+  tenant    User   @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
 
-  amount Decimal @db.Decimal(10, 2)
-
-  method Methods @default(STRIPE)
-
-  status PaymentStatus @default(PENDING)
+  transaction String?       @unique
+  amount      Decimal       @db.Decimal(10, 2)
+  method      Methods       @default(SSLCOMMERZ)
+  status      PaymentStatus @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -25,6 +24,7 @@ enum PaymentStatus {
 }
 
 enum Methods {
+  SSLCOMMERZ
   STRIPE
   BKASH
 }

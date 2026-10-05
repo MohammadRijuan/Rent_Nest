@@ -13,5 +13,10 @@ router.put("/properties/:id", authMiddleware(Role.LANDLORD,Role.ADMIN), landloar
 router.delete("/properties/:id", authMiddleware(Role.LANDLORD,Role.ADMIN), landloardController.deleteProperty)
 
 
+router.get("/requests",authMiddleware(Role.LANDLORD,Role.ADMIN), landloardController.getAllHisRentalRequ)
+
+
+router.patch("/requests/:id",authMiddleware(Role.LANDLORD,Role.ADMIN), landloardController.updateRentalRequest)
+
 
 export const landlordRoutes = router

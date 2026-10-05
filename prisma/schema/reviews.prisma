@@ -4,12 +4,18 @@ model Reviews {
   tenant_id String
   tenant    User   @relation(fields: [tenant_id], references: [id], onDelete: Cascade)
 
+  property_id String
+  property Property @relation(fields: [property_id],references: [id],onDelete: Cascade)
+
   // property
 
   comment String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
 
+  // per review for per
+  @@unique([tenant_id, property_id])
   @@map("reviews")
 }

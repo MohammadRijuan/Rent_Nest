@@ -1,5 +1,9 @@
 import { prisma } from "../../lib/prisma";
-import type { AllRentalPayload, RentalPayload } from "./getAll.interface";
+import type {
+  AllRentalPayload,
+  CreateReviewPayload,
+  RentalPayload,
+} from "./getAll.interface";
 
 const getAllCategoryService = async () => {
   const result = await prisma.category.findMany({
@@ -12,7 +16,6 @@ const getAllCategoryService = async () => {
   });
   return result;
 };
-
 
 // way of getting all property without filter
 
@@ -35,8 +38,6 @@ const getAllCategoryService = async () => {
 // };
 
 // property get by id
-
-
 
 // way of getting all property with filter including pagination
 
@@ -79,12 +80,12 @@ const getAllPropertiesService = async (query: IPropertyQuery) => {
     where.rent = {};
 
     if (minPrice) {
-        // gte = greater than equal
+      // gte = greater than equal
       where.rent.gte = Number(minPrice);
     }
 
     if (maxPrice) {
-          // lte = lte than equal
+      // lte = lte than equal
       where.rent.lte = Number(maxPrice);
     }
   }
@@ -115,6 +116,11 @@ const getAllPropertiesService = async (query: IPropertyQuery) => {
             name: true,
           },
         },
+        reviews: {
+          select: {
+            comment: true,
+          },
+        },
       },
     }),
 
@@ -135,8 +141,7 @@ const getAllPropertiesService = async (query: IPropertyQuery) => {
   };
 };
 
-
-// property filter by id 
+// property filter by id
 
 const getPropertyByIdService = async (propertyId: string) => {
   const transactionResult = await prisma.$transaction(async (tx) => {
@@ -172,96 +177,152 @@ const getPropertyByIdService = async (propertyId: string) => {
   return transactionResult;
 };
 
-
-
 // create rentals service
-const createRentalService = async(payload:RentalPayload,userId:string)=>{
+const createRentalService = async (payload: RentalPayload, userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
 
-    const user = await prisma.user.findUnique({
-        where : {
-            id:userId
-        }
-    });
+  if (user?.activeStatus !== "ACTIVE" || user.role !== "TENANT") {
+    throw new Error("You cannot create a rental request");
+  }
 
+  const { property_id, move_in_date, message } = payload;
 
-    if(user?.activeStatus !== "ACTIVE" || user.role !== "TENANT"){
-        throw new Error("You cannot create a rental request")
-    }
-
-    const {property_id,move_in_date,message} = payload
-
-    // create rental
-    const rentalRequ = await prisma.rental.create({
-        data:{
-            tenant_id : userId,
-            property_id,
-            move_in_date,
-            message,
-
+  // create rental
+  const rentalRequ = await prisma.rental.create({
+    data: {
+      tenant_id: userId,
+      property_id,
+      move_in_date,
+      message,
+    },
+    include: {
+      property: {
+        select: {
+          titles: true,
         },
-        include:{
-            property:{
-                select:{
-                    titles:true,
-                }
-            },
-            payments:{
-              select:{
-                status : true  
-              }
-            },
-            profile :{
-                select:{
-                    name:true
-                }
-            }
-        }
+      },
+      payments: {
+        select: {
+          status: true,
+        },
+      },
+    },
+  });
 
-    });
-
-
-    return rentalRequ
-
-}
-
+  return rentalRequ;
+};
 
 // get all rental request
-const getRentalsService = async()=>{
-
-    const allRentals = await prisma.rental.findMany({
-        orderBy:{
-            createdAt:"desc"
+const getRentalsService = async () => {
+  const allRentals = await prisma.rental.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    omit: {
+      tenant_id: true,
+      property_id: true,
+    },
+    include: {
+      tenant: {
+        select: {
+          id: true,
+          name: true,
         },
-        omit:{
-            tenant_id:true,
-            property_id:true
+      },
+      property: {
+        select: {
+          id: true,
+          titles: true,
         },
-        include:{
-            tenant :{
-                select:{
-                    id:true,
-                   name:true
-                }
-            },
-            property:{
-                select:{
-                    id:true,
-                    titles:true
-                }
-            }
-        }
-    })
+      },
+      payments: {
+        select: {
+          status: true,
+        },
+      },
+    },
+  });
 
-    return allRentals
+  return allRentals;
+};
 
-}
+// create review
+const createReviewService = async (
+  payload: CreateReviewPayload,
+  userId: string,
+) => {
+  const { property_id, comment } = payload;
 
+  const rentalRequ = await prisma.rental.findFirst({
+    where: {
+      tenant_id: userId,
+      property_id,
+      status: "APPROVED",
+      payments: {
+        some: {
+          status: "SUCCESS",
+        },
+      },
+    },
+  });
 
+  if (!rentalRequ) {
+    throw new Error("You can review property only after completing payment");
+  }
+
+  // checking current user have any comment of this property
+  const existingReview = await prisma.reviews.findUnique({
+    where: {
+      tenant_id_property_id: {
+        tenant_id: userId,
+        property_id,
+      },
+    },
+  });
+
+  if (existingReview) {
+    throw new Error("You already reviewed this property");
+  }
+
+  const review = await prisma.reviews.create({
+    data: {
+      tenant_id: userId,
+      property_id,
+      comment,
+    },
+    omit: {
+      tenant_id: true,
+      property_id: true,
+    },
+    include: {
+      tenant: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      property: {
+        select: {
+          id: true,
+          titles: true,
+          location: true,
+        },
+      },
+    },
+  });
+
+  return review;
+};
 
 export const getAllServices = {
   getAllCategoryService,
   getAllPropertiesService,
   getPropertyByIdService,
   createRentalService,
-  getRentalsService
+  getRentalsService,
+  createReviewService,
 };

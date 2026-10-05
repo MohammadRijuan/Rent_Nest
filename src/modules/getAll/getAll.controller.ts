@@ -102,22 +102,37 @@ const createRentals = catchAsync(
 
 const getRentals = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    
     // const payload = req.body
 
-    const allRentals = await getAllServices.getRentalsService()
-    
-    sendResponse(res,{
-        success:true,
-        statusCode:httpStatus.OK,
-        message:"All rental fetched successfully",
-        data : allRentals
-    })
+    const allRentals = await getAllServices.getRentalsService();
 
-
-
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "All rental fetched successfully",
+      data: allRentals,
+    });
   },
 );
+
+// create review
+const createReview = catchAsync(async (req: Request, res: Response) => {
+
+  const payload = req.body;
+  const userId = req.user?.id
+
+  const result = await getAllServices.createReviewService(
+    payload,
+    userId as string,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Review created successfully",
+    data: result,
+  });
+});
 
 export const getAllControllers = {
   getAllCategory,
@@ -125,4 +140,5 @@ export const getAllControllers = {
   getPropertyById,
   createRentals,
   getRentals,
+  createReview,
 };

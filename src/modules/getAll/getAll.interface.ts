@@ -13,3 +13,9 @@ export interface AllRentalPayload{
     message ?:string;
     status ?: RentalStatus;
 }
+
+
+export interface CreateReviewPayload {
+  property_id: string;
+  comment: string;
+}

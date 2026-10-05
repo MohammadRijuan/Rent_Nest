@@ -21,6 +21,7 @@ model Property {
 
   // Relations
   rentals Rental[]
+  reviews Reviews[]
 
   @@map("properties")
 }
