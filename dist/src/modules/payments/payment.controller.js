@@ -18,15 +18,16 @@ const createPayment = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     });
 });
 const confirmPayment = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
-    console.log("===== SSLCOMMERZ CALLBACK =====");
-    console.log(req.body);
+    // for checking the val_id
+    // console.log("===== SSLCOMMERZ CALLBACK =====");
+    // console.log(req.body);
     const payload = req.body;
     const result = await payment_service_1.paymentsServices.confirmPaymentService(payload);
     (0, sendResponse_1.sendResponse)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
         message: "Payment confirmed successfully",
-        data: result
+        data: result,
     });
 });
 const getPayments = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
@@ -54,6 +55,6 @@ exports.paymentsController = {
     createPayment,
     confirmPayment,
     getPayments,
-    getPaymentById
+    getPaymentById,
 };
 //# sourceMappingURL=payment.controller.js.map

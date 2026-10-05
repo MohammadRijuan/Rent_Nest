@@ -36,7 +36,7 @@ app.use("/", (req, res) => {
     // res.send("Hello mama ki obosta ...server er initial setup kore felsi")
     res.json({
         success: true,
-        message: "Hello mama ki obosta ...server er initial setup kore felsi"
+        message: "Congratulations ... Rent Nest backend server is now live..."
     });
 });
 // not found middleware
