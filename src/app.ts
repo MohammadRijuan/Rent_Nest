@@ -30,13 +30,6 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 
 
-app.use("/",(req:Request,res:Response)=>{
-    // res.send("Hello mama ki obosta ...server er initial setup kore felsi")
-    res.json({
-        success:true,
-        message:"Hello mama ki obosta ...server er initial setup kore felsi"
-    })
-})
 
 
 // all api
@@ -51,6 +44,16 @@ app.use("/api/admin",adminRoutes)
 app.use("/api",getAllRoutes)
 
 app.use("/api/payments",getPaymentRoutes)
+
+
+
+app.use("/",(req:Request,res:Response)=>{
+    // res.send("Hello mama ki obosta ...server er initial setup kore felsi")
+    res.json({
+        success:true,
+        message:"Hello mama ki obosta ...server er initial setup kore felsi"
+    })
+})
 
 
 // not found middleware
