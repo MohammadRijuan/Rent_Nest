@@ -9,6 +9,7 @@ import { getAllRoutes } from "./modules/getAll/getAll.route";
 import { adminRoutes } from "./modules/admin/admin.route";
 import { getPaymentRoutes } from "./modules/payments/payment.route";
 import { notFound } from "./middlewares/notFound";
+import { golbalErrorHandler } from "./middlewares/globalErrorHandler";
 
 
 
