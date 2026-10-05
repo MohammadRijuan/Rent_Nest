@@ -1,6 +1,9 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.adminServices = void 0;
+const prisma_1 = require("../../lib/prisma");
 const getAllUserService = async (userId) => {
-    const user = await prisma.user.findUniqueOrThrow({
+    const user = await prisma_1.prisma.user.findUniqueOrThrow({
         where: {
             id: userId,
         },
@@ -8,7 +11,7 @@ const getAllUserService = async (userId) => {
     if (user.activeStatus !== "ACTIVE" || user.role !== "ADMIN") {
         throw new Error("sorry you dont have access of this route");
     }
-    const result = await prisma.user.findMany({
+    const result = await prisma_1.prisma.user.findMany({
         orderBy: {
             createdAt: "desc",
         },
@@ -20,7 +23,7 @@ const getAllUserService = async (userId) => {
 };
 // update user by id 
 const updateUserByIdService = async (payload, userId) => {
-    const user = await prisma.user.update({
+    const user = await prisma_1.prisma.user.update({
         where: {
             id: userId
         },
@@ -62,7 +65,7 @@ const getAllPropertiesService = async (query) => {
         };
     }
     const [properties, total] = await Promise.all([
-        prisma.property.findMany({
+        prisma_1.prisma.property.findMany({
             where,
             orderBy: {
                 createdAt: "desc",
@@ -77,7 +80,7 @@ const getAllPropertiesService = async (query) => {
                 },
             },
         }),
-        prisma.property.count({
+        prisma_1.prisma.property.count({
             where,
         }),
     ]);
@@ -91,7 +94,7 @@ const getAllPropertiesService = async (query) => {
         data: properties,
     };
 };
-export const adminServices = {
+exports.adminServices = {
     getAllUserService,
     getAllPropertiesService,
     updateUserByIdService

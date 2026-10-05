@@ -1,42 +1,48 @@
-import { catchAsync } from "../../utils/catchAsync";
-import { adminServices } from "./admin.service";
-import { sendResponse } from "../../utils/sendResponse";
-import httpStatus from "http-status";
-const getAlluser = catchAsync(async (req, res, next) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.adminControllers = void 0;
+const catchAsync_1 = require("../../utils/catchAsync");
+const admin_service_1 = require("./admin.service");
+const sendResponse_1 = require("../../utils/sendResponse");
+const http_status_1 = __importDefault(require("http-status"));
+const getAlluser = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const userId = req.user?.id;
     if (!userId) {
         throw new Error("You are not admin");
     }
-    const result = await adminServices.getAllUserService(userId);
-    sendResponse(res, {
+    const result = await admin_service_1.adminServices.getAllUserService(userId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "All users retrieved successfully",
         data: result
     });
 });
 // update user by id
-const updateUserById = catchAsync(async (req, res, next) => {
+const updateUserById = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const payload = req.body;
     const userId = req.params.id;
-    const result = await adminServices.updateUserByIdService(payload, userId);
-    sendResponse(res, {
+    const result = await admin_service_1.adminServices.updateUserByIdService(payload, userId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "update user data successfully",
         data: result
     });
 });
-const getAllProperties = catchAsync(async (req, res, next) => {
-    const result = await adminServices.getAllPropertiesService(req.query);
-    sendResponse(res, {
+const getAllProperties = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const result = await admin_service_1.adminServices.getAllPropertiesService(req.query);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "All properties retrieved successfully",
         data: result,
     });
 });
-export const adminControllers = {
+exports.adminControllers = {
     getAlluser,
     getAllProperties,
     updateUserById

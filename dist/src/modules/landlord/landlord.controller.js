@@ -1,73 +1,78 @@
-import { catchAsync } from "../../utils/catchAsync";
-import { landlordServices } from "./landlord.service";
-import { sendResponse } from "../../utils/sendResponse";
-import httpStatus from "http-status";
-import { use } from "react";
-const createProperty = catchAsync(async (req, res, next) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.landloardController = void 0;
+const catchAsync_1 = require("../../utils/catchAsync");
+const landlord_service_1 = require("./landlord.service");
+const sendResponse_1 = require("../../utils/sendResponse");
+const http_status_1 = __importDefault(require("http-status"));
+const createProperty = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const id = req.user?.id;
     const payload = req.body;
-    const result = await landlordServices.createPropertyService(payload, id);
-    sendResponse(res, {
+    const result = await landlord_service_1.landlordServices.createPropertyService(payload, id);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.CREATED,
+        statusCode: http_status_1.default.CREATED,
         message: "property created successfully",
         data: result
     });
 });
 // update properties
-const updateProperty = catchAsync(async (req, res, next) => {
+const updateProperty = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const propertyId = req.params.id;
     const payload = req.body;
-    const result = await landlordServices.updatePropertyService(payload, propertyId);
-    sendResponse(res, {
+    const result = await landlord_service_1.landlordServices.updatePropertyService(payload, propertyId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "property updated successfully",
         data: result
     });
 });
 // delete property 
-const deleteProperty = catchAsync(async (req, res, next) => {
+const deleteProperty = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const propertyId = req.params.id;
-    const property = await landlordServices.deletePropertyService(propertyId);
-    sendResponse(res, {
+    const property = await landlord_service_1.landlordServices.deletePropertyService(propertyId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "Property deleted successfully",
         data: property
     });
 });
 // getting all request
-const getAllHisRentalRequ = catchAsync(async (req, res, next) => {
+const getAllHisRentalRequ = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const userId = req.user?.id;
     if (!userId) {
         throw new Error("User not authenticated");
     }
-    const AllRentalRequ = await landlordServices.getAllHisRentalRequService(userId);
-    sendResponse(res, {
+    const AllRentalRequ = await landlord_service_1.landlordServices.getAllHisRentalRequService(userId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "Rental Requests of your properties",
         data: AllRentalRequ
     });
 });
 // updating rental requ status
-const updateRentalRequest = catchAsync(async (req, res, next) => {
+const updateRentalRequest = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const { id } = req.params;
     const { status } = req.body;
     const userId = req.user?.id;
     if (!userId) {
         throw new Error("You are not authenticated");
     }
-    const result = await landlordServices.updateRentalRequestService(userId, id, status);
-    sendResponse(res, {
+    const result = await landlord_service_1.landlordServices.updateRentalRequestService(userId, id, status);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "Rental request status updated successfully",
         data: result,
     });
 });
-export const landloardController = {
+exports.landloardController = {
     createProperty,
     updateProperty,
     deleteProperty,

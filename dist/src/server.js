@@ -1,11 +1,16 @@
-import app from "./app";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const app_1 = __importDefault(require("./app"));
 // import config from "./config";
-import { prisma } from "./lib/prisma";
+const prisma_1 = require("./lib/prisma");
 // const PORT = config.port;
 async function main() {
     try {
         // connecting the database
-        await prisma.$connect();
+        await prisma_1.prisma.$connect();
         console.log("Connected to the database");
         // app.listen(PORT,()=>{
         //     console.log(`Rent Nest is running on server : ${PORT}`)
@@ -13,9 +18,10 @@ async function main() {
     }
     catch (error) {
         console.log(`errors are : ${error}`);
-        await prisma.$disconnect();
+        await prisma_1.prisma.$disconnect();
         process.exit(1);
     }
 }
 main();
+exports.default = app_1.default;
 //# sourceMappingURL=server.js.map

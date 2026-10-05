@@ -1,6 +1,9 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.categoryServices = void 0;
+const prisma_1 = require("../../lib/prisma");
 const createCategory = async (payload, userId) => {
-    const user = await prisma.user.findUniqueOrThrow({
+    const user = await prisma_1.prisma.user.findUniqueOrThrow({
         where: {
             id: userId,
         },
@@ -21,7 +24,7 @@ const createCategory = async (payload, userId) => {
         throw new Error("Description cannot exceed 500 characters");
     }
     // checking duplicate
-    const isExistCategory = await prisma.category.findUnique({
+    const isExistCategory = await prisma_1.prisma.category.findUnique({
         where: {
             name: categoryName,
         },
@@ -30,7 +33,7 @@ const createCategory = async (payload, userId) => {
         throw new Error("This category already exist");
     }
     // if not then create a category
-    const result = await prisma.category.create({
+    const result = await prisma_1.prisma.category.create({
         data: {
             ...payload,
             name: categoryName,
@@ -39,7 +42,7 @@ const createCategory = async (payload, userId) => {
     });
     return result;
 };
-export const categoryServices = {
+exports.categoryServices = {
     createCategory,
 };
 //# sourceMappingURL=category.service.js.map

@@ -1,13 +1,19 @@
-import { catchAsync } from "../../utils/catchAsync";
-import { getAllServices } from "./getAll.service";
-import { sendResponse } from "../../utils/sendResponse";
-import httpStatus from "http-status";
-const getAllCategory = catchAsync(async (req, res, next) => {
-    const result = await getAllServices.getAllCategoryService();
-    sendResponse(res, {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAllControllers = void 0;
+const catchAsync_1 = require("../../utils/catchAsync");
+const getAll_service_1 = require("./getAll.service");
+const sendResponse_1 = require("../../utils/sendResponse");
+const http_status_1 = __importDefault(require("http-status"));
+const getAllCategory = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const result = await getAll_service_1.getAllServices.getAllCategoryService();
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
         message: "Categories retrieved successfully",
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         data: result,
     });
 });
@@ -23,64 +29,64 @@ const getAllCategory = catchAsync(async (req, res, next) => {
 //   },
 // );
 // way of getting all property with filter
-const getAllProperties = catchAsync(async (req, res, next) => {
-    const result = await getAllServices.getAllPropertiesService(req.query);
-    sendResponse(res, {
+const getAllProperties = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const result = await getAll_service_1.getAllServices.getAllPropertiesService(req.query);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "All properties retrieved successfully",
         data: result,
     });
 });
 // getting property by id
-const getPropertyById = catchAsync(async (req, res, next) => {
+const getPropertyById = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const propertyId = req.params.id;
     if (!propertyId) {
         throw new Error("property id required in params");
     }
-    const result = await getAllServices.getPropertyByIdService(propertyId);
-    sendResponse(res, {
+    const result = await getAll_service_1.getAllServices.getPropertyByIdService(propertyId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: " single property retrieved successfully",
         data: result,
     });
 });
 // renatls
-const createRentals = catchAsync(async (req, res, next) => {
+const createRentals = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const userId = req.user?.id;
     const payload = req.body;
-    const rental = await getAllServices.createRentalService(payload, userId);
-    sendResponse(res, {
+    const rental = await getAll_service_1.getAllServices.createRentalService(payload, userId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "Rental request created successfully",
         data: rental,
     });
 });
-const getRentals = catchAsync(async (req, res, next) => {
+const getRentals = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     // const payload = req.body
-    const allRentals = await getAllServices.getRentalsService();
-    sendResponse(res, {
+    const allRentals = await getAll_service_1.getAllServices.getRentalsService();
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "All rental fetched successfully",
         data: allRentals,
     });
 });
 // create review
-const createReview = catchAsync(async (req, res) => {
+const createReview = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const payload = req.body;
     const userId = req.user?.id;
-    const result = await getAllServices.createReviewService(payload, userId);
-    sendResponse(res, {
+    const result = await getAll_service_1.getAllServices.createReviewService(payload, userId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.CREATED,
+        statusCode: http_status_1.default.CREATED,
         message: "Review created successfully",
         data: result,
     });
 });
-export const getAllControllers = {
+exports.getAllControllers = {
     getAllCategory,
     getAllProperties,
     getPropertyById,

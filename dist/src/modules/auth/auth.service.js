@@ -1,10 +1,16 @@
-import bcrypt from "bcryptjs";
-import { prisma } from "../../lib/prisma";
-import config from "../../config";
-import { jwtUtils } from "../../utils/jwt";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authServices = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const prisma_1 = require("../../lib/prisma");
+const config_1 = __importDefault(require("../../config"));
+const jwt_1 = require("../../utils/jwt");
 const registerUserService = async (payload) => {
     const { name, email, password, role, profilePhoto } = payload;
-    const isUserExist = await prisma.user.findUnique({
+    const isUserExist = await prisma_1.prisma.user.findUnique({
         where: {
             email,
         },
@@ -14,9 +20,9 @@ const registerUserService = async (payload) => {
         throw new Error("User With this email already exist");
     }
     //   hashed password
-    const hashedPassword = await bcrypt.hash(password, Number(config.bcrypt_salt_rounds));
+    const hashedPassword = await bcryptjs_1.default.hash(password, Number(config_1.default.bcrypt_salt_rounds));
     // if not exist then create a new account
-    const createUser = await prisma.user.create({
+    const createUser = await prisma_1.prisma.user.create({
         data: {
             name,
             email,
@@ -30,7 +36,7 @@ const registerUserService = async (payload) => {
         },
     });
     //    created one
-    const user = await prisma.user.findUnique({
+    const user = await prisma_1.prisma.user.findUnique({
         where: {
             id: createUser.id,
             email: createUser.email || email,
@@ -47,7 +53,7 @@ const registerUserService = async (payload) => {
 };
 const loginUserService = async (payload) => {
     const { email, password } = payload;
-    const user = await prisma.user.findUniqueOrThrow({
+    const user = await prisma_1.prisma.user.findUniqueOrThrow({
         where: {
             email
         }
@@ -55,7 +61,7 @@ const loginUserService = async (payload) => {
     if (user.activeStatus === "BLOCKED") {
         throw new Error("Your account has been blocked... Please Contact Support");
     }
-    const isPasswordMatched = await bcrypt.compare(password, user.password);
+    const isPasswordMatched = await bcryptjs_1.default.compare(password, user.password);
     if (!isPasswordMatched) {
         throw new Error("Password is incorrect");
     }
@@ -65,20 +71,20 @@ const loginUserService = async (payload) => {
         email: user.email,
         role: user.role
     };
-    const accessToken = jwtUtils.createToken(jwtPayload, config.jwt_access_secret, config.jwt_access_expires_in);
-    const refreshToken = jwtUtils.createToken(jwtPayload, config.jwt_refresh_secret, config.jwt_refresh_expires_in);
+    const accessToken = jwt_1.jwtUtils.createToken(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
+    const refreshToken = jwt_1.jwtUtils.createToken(jwtPayload, config_1.default.jwt_refresh_secret, config_1.default.jwt_refresh_expires_in);
     return {
         accessToken,
         refreshToken
     };
 };
 const refreshToken = async (refreshToken) => {
-    const verifiedRefreshToken = jwtUtils.verifyToken(refreshToken, config.jwt_refresh_secret);
+    const verifiedRefreshToken = jwt_1.jwtUtils.verifyToken(refreshToken, config_1.default.jwt_refresh_secret);
     if (!verifiedRefreshToken.success) {
         throw new Error(verifiedRefreshToken.error);
     }
     const { id } = verifiedRefreshToken.data;
-    const user = await prisma.user.findUniqueOrThrow({
+    const user = await prisma_1.prisma.user.findUniqueOrThrow({
         where: {
             id
         }
@@ -92,13 +98,13 @@ const refreshToken = async (refreshToken) => {
         email: user.email,
         role: user.role
     };
-    const accessToken = jwtUtils.createToken(jwtPayload, config.jwt_access_secret, config.jwt_access_expires_in);
+    const accessToken = jwt_1.jwtUtils.createToken(jwtPayload, config_1.default.jwt_access_secret, config_1.default.jwt_access_expires_in);
     return {
         accessToken
     };
 };
 const getMyProfileService = async (userId) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma_1.prisma.user.findUnique({
         where: {
             id: userId
         },
@@ -111,7 +117,7 @@ const getMyProfileService = async (userId) => {
     });
     return user;
 };
-export const authServices = {
+exports.authServices = {
     registerUserService,
     loginUserService,
     refreshToken,

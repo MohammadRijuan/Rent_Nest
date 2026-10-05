@@ -1,8 +1,14 @@
-import config from "../../config";
-import { prisma } from "../../lib/prisma";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.paymentsServices = void 0;
+const config_1 = __importDefault(require("../../config"));
+const prisma_1 = require("../../lib/prisma");
 const createPaymentService = async (payload, userId) => {
     const { rental_id } = payload;
-    const rental = await prisma.rental.findUnique({
+    const rental = await prisma_1.prisma.rental.findUnique({
         where: {
             id: rental_id,
         },
@@ -20,7 +26,7 @@ const createPaymentService = async (payload, userId) => {
     if (rental.status !== "APPROVED") {
         throw new Error("only approved rentals can be paid");
     }
-    const existingPayment = await prisma.payment.findFirst({
+    const existingPayment = await prisma_1.prisma.payment.findFirst({
         where: {
             rental_id: rental.id,
             status: {
@@ -37,14 +43,14 @@ const createPaymentService = async (payload, userId) => {
     }
     const transactionId = `Rent - ${Date.now()}-${Math.floor(Math.random() * 100000)}`;
     const paymentData = new URLSearchParams({
-        store_id: config.ssl_store_id,
-        store_passwd: config.ssl_store_password,
+        store_id: config_1.default.ssl_store_id,
+        store_passwd: config_1.default.ssl_store_password,
         total_amount: amount.toString(),
         currency: "BDT",
         tran_id: transactionId,
-        success_url: `${config.app_url}/api/payments/confirm`,
-        fail_url: `${config.app_url}/api/payments/confirm`,
-        cancel_url: `${config.app_url}/api/payments/confirm`,
+        success_url: `${config_1.default.app_url}/api/payments/confirm`,
+        fail_url: `${config_1.default.app_url}/api/payments/confirm`,
+        cancel_url: `${config_1.default.app_url}/api/payments/confirm`,
         product_name: rental.property.titles,
         product_category: "Rental",
         product_profile: "general",
@@ -54,7 +60,7 @@ const createPaymentService = async (payload, userId) => {
         num_of_item: "1",
         value_a: rental.id,
     });
-    const response = await fetch(`${config.ssl_base_url}/gwprocess/v4/api.php`, {
+    const response = await fetch(`${config_1.default.ssl_base_url}/gwprocess/v4/api.php`, {
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -68,7 +74,7 @@ const createPaymentService = async (payload, userId) => {
     if (!sslResponse.GatewayPageURL) {
         throw new Error(sslResponse.failedreason || "Failed to create SSLCOMMERZ payment session");
     }
-    const payment = await prisma.payment.create({
+    const payment = await prisma_1.prisma.payment.create({
         data: {
             rental_id: rental.id,
             tenant_id: userId,
@@ -95,7 +101,7 @@ const confirmPaymentService = async (payload) => {
         throw new Error("Validation ID is missing");
     }
     // Find our payment
-    const payment = await prisma.payment.findUnique({
+    const payment = await prisma_1.prisma.payment.findUnique({
         where: {
             transaction: tran_id,
         },
@@ -112,10 +118,10 @@ const confirmPaymentService = async (payload) => {
     }
     // this part is crucial from starting here to ->
     // Ask SSLCOMMERZ to validate the transaction
-    const validationUrl = new URL(`${config.ssl_base_url}/validator/api/validationserverAPI.php`);
+    const validationUrl = new URL(`${config_1.default.ssl_base_url}/validator/api/validationserverAPI.php`);
     validationUrl.searchParams.set("val_id", val_id);
-    validationUrl.searchParams.set("store_id", config.ssl_store_id);
-    validationUrl.searchParams.set("store_passwd", config.ssl_store_password);
+    validationUrl.searchParams.set("store_id", config_1.default.ssl_store_id);
+    validationUrl.searchParams.set("store_passwd", config_1.default.ssl_store_password);
     validationUrl.searchParams.set("format", "json");
     const response = await fetch(validationUrl);
     if (!response.ok) {
@@ -125,7 +131,7 @@ const confirmPaymentService = async (payload) => {
     // Check SSLCOMMERZ status
     if (validationResponse.status !== "VALID" &&
         validationResponse.status !== "VALIDATED") {
-        await prisma.payment.update({
+        await prisma_1.prisma.payment.update({
             where: {
                 id: payment.id,
             },
@@ -149,7 +155,7 @@ const confirmPaymentService = async (payload) => {
     }
     // ending here is crucial part.... because we are not validating payment manually now, sslcommerz make it validated automatically
     // Everything is valid
-    const updatedPayment = await prisma.payment.update({
+    const updatedPayment = await prisma_1.prisma.payment.update({
         where: {
             id: payment.id,
         },
@@ -157,7 +163,7 @@ const confirmPaymentService = async (payload) => {
             status: "SUCCESS",
         },
     });
-    await prisma.property.update({
+    await prisma_1.prisma.property.update({
         where: {
             id: payment.rental.property_id,
         },
@@ -169,7 +175,7 @@ const confirmPaymentService = async (payload) => {
 };
 // get users payment history
 const getPaymentsService = async (userId) => {
-    const payments = await prisma.payment.findMany({
+    const payments = await prisma_1.prisma.payment.findMany({
         where: {
             tenant_id: userId,
         },
@@ -203,7 +209,7 @@ const getPaymentsService = async (userId) => {
 };
 // get payment by id
 const getPaymentByIdService = async (paymentId, userId) => {
-    const payment = await prisma.payment.findUnique({
+    const payment = await prisma_1.prisma.payment.findUnique({
         where: {
             id: paymentId,
         },
@@ -241,7 +247,7 @@ const getPaymentByIdService = async (paymentId, userId) => {
     }
     return payment;
 };
-export const paymentsServices = {
+exports.paymentsServices = {
     createPaymentService,
     confirmPaymentService,
     getPaymentsService,

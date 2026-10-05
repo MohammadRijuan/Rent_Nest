@@ -1,50 +1,56 @@
-import { catchAsync } from "../../utils/catchAsync";
-import { paymentsServices } from "./payment.service";
-import { sendResponse } from "../../utils/sendResponse";
-import httpStatus from "http-status";
-const createPayment = catchAsync(async (req, res, next) => {
-    const result = await paymentsServices.createPaymentService(req.body, req.user.id);
-    sendResponse(res, {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.paymentsController = void 0;
+const catchAsync_1 = require("../../utils/catchAsync");
+const payment_service_1 = require("./payment.service");
+const sendResponse_1 = require("../../utils/sendResponse");
+const http_status_1 = __importDefault(require("http-status"));
+const createPayment = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
+    const result = await payment_service_1.paymentsServices.createPaymentService(req.body, req.user.id);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.CREATED,
+        statusCode: http_status_1.default.CREATED,
         message: "Payment session created successfully",
         data: result,
     });
 });
-const confirmPayment = catchAsync(async (req, res, next) => {
+const confirmPayment = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     console.log("===== SSLCOMMERZ CALLBACK =====");
     console.log(req.body);
     const payload = req.body;
-    const result = await paymentsServices.confirmPaymentService(payload);
-    sendResponse(res, {
+    const result = await payment_service_1.paymentsServices.confirmPaymentService(payload);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "Payment confirmed successfully",
         data: result
     });
 });
-const getPayments = catchAsync(async (req, res, next) => {
+const getPayments = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const userId = req.user?.id;
-    const result = await paymentsServices.getPaymentsService(userId);
-    sendResponse(res, {
+    const result = await payment_service_1.paymentsServices.getPaymentsService(userId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "All Payments fetched successfully",
         data: result,
     });
 });
-const getPaymentById = catchAsync(async (req, res) => {
+const getPaymentById = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const paymentId = req.params.id;
     const userId = req.user?.id;
-    const result = await paymentsServices.getPaymentByIdService(paymentId, userId);
-    sendResponse(res, {
+    const result = await payment_service_1.paymentsServices.getPaymentByIdService(paymentId, userId);
+    (0, sendResponse_1.sendResponse)(res, {
         success: true,
-        statusCode: httpStatus.OK,
+        statusCode: http_status_1.default.OK,
         message: "Payment fetched successfully",
         data: result,
     });
 });
-export const paymentsController = {
+exports.paymentsController = {
     createPayment,
     confirmPayment,
     getPayments,

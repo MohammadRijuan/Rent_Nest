@@ -1,6 +1,9 @@
-import { prisma } from "../../lib/prisma";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getAllServices = void 0;
+const prisma_1 = require("../../lib/prisma");
 const getAllCategoryService = async () => {
-    const result = await prisma.category.findMany({
+    const result = await prisma_1.prisma.category.findMany({
         orderBy: {
             createdAt: "desc",
         },
@@ -44,7 +47,7 @@ const getAllPropertiesService = async (query) => {
         };
     }
     const [properties, total] = await Promise.all([
-        prisma.property.findMany({
+        prisma_1.prisma.property.findMany({
             where,
             orderBy: {
                 createdAt: "desc",
@@ -64,7 +67,7 @@ const getAllPropertiesService = async (query) => {
                 },
             },
         }),
-        prisma.property.count({
+        prisma_1.prisma.property.count({
             where,
         }),
     ]);
@@ -80,7 +83,7 @@ const getAllPropertiesService = async (query) => {
 };
 // property filter by id
 const getPropertyByIdService = async (propertyId) => {
-    const transactionResult = await prisma.$transaction(async (tx) => {
+    const transactionResult = await prisma_1.prisma.$transaction(async (tx) => {
         // if we want views then we have to update schema with views field
         // await tx.property.update({
         //     where : {
@@ -110,7 +113,7 @@ const getPropertyByIdService = async (propertyId) => {
 };
 // create rentals service
 const createRentalService = async (payload, userId) => {
-    const user = await prisma.user.findUnique({
+    const user = await prisma_1.prisma.user.findUnique({
         where: {
             id: userId,
         },
@@ -120,7 +123,7 @@ const createRentalService = async (payload, userId) => {
     }
     const { property_id, move_in_date, message } = payload;
     // create rental
-    const rentalRequ = await prisma.rental.create({
+    const rentalRequ = await prisma_1.prisma.rental.create({
         data: {
             tenant_id: userId,
             property_id,
@@ -144,7 +147,7 @@ const createRentalService = async (payload, userId) => {
 };
 // get all rental request
 const getRentalsService = async () => {
-    const allRentals = await prisma.rental.findMany({
+    const allRentals = await prisma_1.prisma.rental.findMany({
         orderBy: {
             createdAt: "desc",
         },
@@ -177,7 +180,7 @@ const getRentalsService = async () => {
 // create review
 const createReviewService = async (payload, userId) => {
     const { property_id, comment } = payload;
-    const rentalRequ = await prisma.rental.findFirst({
+    const rentalRequ = await prisma_1.prisma.rental.findFirst({
         where: {
             tenant_id: userId,
             property_id,
@@ -193,7 +196,7 @@ const createReviewService = async (payload, userId) => {
         throw new Error("You can review property only after completing payment");
     }
     // checking current user have any comment of this property
-    const existingReview = await prisma.reviews.findUnique({
+    const existingReview = await prisma_1.prisma.reviews.findUnique({
         where: {
             tenant_id_property_id: {
                 tenant_id: userId,
@@ -204,7 +207,7 @@ const createReviewService = async (payload, userId) => {
     if (existingReview) {
         throw new Error("You already reviewed this property");
     }
-    const review = await prisma.reviews.create({
+    const review = await prisma_1.prisma.reviews.create({
         data: {
             tenant_id: userId,
             property_id,
@@ -232,7 +235,7 @@ const createReviewService = async (payload, userId) => {
     });
     return review;
 };
-export const getAllServices = {
+exports.getAllServices = {
     getAllCategoryService,
     getAllPropertiesService,
     getPropertyByIdService,

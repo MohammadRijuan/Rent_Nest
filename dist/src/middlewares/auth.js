@@ -1,9 +1,15 @@
-import { catchAsync } from "../utils/catchAsync";
-import { jwtUtils } from "../utils/jwt";
-import config from "../config";
-import { prisma } from "../lib/prisma";
-export const authMiddleware = (...RequiredRoles) => {
-    return catchAsync(async (req, res, next) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authMiddleware = void 0;
+const catchAsync_1 = require("../utils/catchAsync");
+const jwt_1 = require("../utils/jwt");
+const config_1 = __importDefault(require("../config"));
+const prisma_1 = require("../lib/prisma");
+const authMiddleware = (...RequiredRoles) => {
+    return (0, catchAsync_1.catchAsync)(async (req, res, next) => {
         const token = req.cookies.accessToken ? req.cookies.accessToken :
             req.headers.authorization?.startsWith("Bearer")
                 ? req.headers.authorization?.split(" ")[1]
@@ -11,7 +17,7 @@ export const authMiddleware = (...RequiredRoles) => {
         if (!token) {
             throw new Error("You are not logged in... Please login to access this resource");
         }
-        const verifiedToken = jwtUtils.verifyToken(token, config.jwt_access_secret);
+        const verifiedToken = jwt_1.jwtUtils.verifyToken(token, config_1.default.jwt_access_secret);
         if (!verifiedToken.success) {
             throw new Error(verifiedToken.error);
         }
@@ -19,7 +25,7 @@ export const authMiddleware = (...RequiredRoles) => {
         if (RequiredRoles.length && !RequiredRoles.includes(role)) {
             throw new Error("Forbidden !!! You Donot have permission to access this resource");
         }
-        const user = await prisma.user.findUnique({
+        const user = await prisma_1.prisma.user.findUnique({
             where: {
                 id,
                 name,
@@ -42,4 +48,5 @@ export const authMiddleware = (...RequiredRoles) => {
         next();
     });
 };
+exports.authMiddleware = authMiddleware;
 //# sourceMappingURL=auth.js.map

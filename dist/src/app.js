@@ -1,25 +1,37 @@
-import express, {} from "express";
-import cors from "cors";
-import config from "./config";
-import cookieParser from "cookie-parser";
-import { authRoutes } from "./modules/auth/auth.route";
-import { landlordRoutes } from "./modules/landlord/landlord.route";
-import { categoryRoutes } from "./modules/category/category.route";
-import { getAllRoutes } from "./modules/getAll/getAll.route";
-import { adminRoutes } from "./modules/admin/admin.route";
-import { getPaymentRoutes } from "./modules/payments/payment.route";
-import { notFound } from "./middlewares/notFound";
-import { golbalErrorHandler } from "./middlewares/globalErrorHandler";
-const app = express();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const config_1 = __importDefault(require("./config"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const auth_route_1 = require("./modules/auth/auth.route");
+const landlord_route_1 = require("./modules/landlord/landlord.route");
+const category_route_1 = require("./modules/category/category.route");
+const getAll_route_1 = require("./modules/getAll/getAll.route");
+const admin_route_1 = require("./modules/admin/admin.route");
+const payment_route_1 = require("./modules/payments/payment.route");
+const notFound_1 = require("./middlewares/notFound");
+const globalErrorHandler_1 = require("./middlewares/globalErrorHandler");
+const app = (0, express_1.default)();
 // using cors so that deployment url can take it automatically
-app.use(cors({
-    origin: config.app_url,
+app.use((0, cors_1.default)({
+    origin: config_1.default.app_url,
     credentials: true,
 }));
 // middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: true }));
+app.use((0, cookie_parser_1.default)());
+// all api
+app.use("/api/auth", auth_route_1.authRoutes);
+app.use("/api/landlord", landlord_route_1.landlordRoutes);
+app.use("/api/category", category_route_1.categoryRoutes);
+app.use("/api/admin", admin_route_1.adminRoutes);
+app.use("/api", getAll_route_1.getAllRoutes);
+app.use("/api/payments", payment_route_1.getPaymentRoutes);
 app.use("/", (req, res) => {
     // res.send("Hello mama ki obosta ...server er initial setup kore felsi")
     res.json({
@@ -27,16 +39,9 @@ app.use("/", (req, res) => {
         message: "Hello mama ki obosta ...server er initial setup kore felsi"
     });
 });
-// all api
-app.use("/api/auth", authRoutes);
-app.use("/api/landlord", landlordRoutes);
-app.use("/api/category", categoryRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api", getAllRoutes);
-app.use("/api/payments", getPaymentRoutes);
 // not found middleware
-app.use(notFound);
+app.use(notFound_1.notFound);
 // global error middleware
-app.use(golbalErrorHandler);
-export default app;
+app.use(globalErrorHandler_1.golbalErrorHandler);
+exports.default = app;
 //# sourceMappingURL=app.js.map
