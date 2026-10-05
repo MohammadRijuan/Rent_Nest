@@ -9,5 +9,6 @@ const router = (0, express_1.Router)();
 router.get("/users", (0, auth_1.authMiddleware)(enums_1.Role.ADMIN), admin_controller_1.adminControllers.getAlluser);
 router.patch("/users/:id", (0, auth_1.authMiddleware)(enums_1.Role.ADMIN), admin_controller_1.adminControllers.updateUserById);
 router.get("/properties", (0, auth_1.authMiddleware)(enums_1.Role.ADMIN), admin_controller_1.adminControllers.getAllProperties);
+router.get("/rentals", (0, auth_1.authMiddleware)(enums_1.Role.ADMIN), admin_controller_1.adminControllers.getAdminRentals);
 exports.adminRoutes = router;
 //# sourceMappingURL=admin.route.js.map

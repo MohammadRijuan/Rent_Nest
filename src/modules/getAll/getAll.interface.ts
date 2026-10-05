@@ -15,6 +15,16 @@ export interface AllRentalPayload{
 }
 
 
+export interface IPropertyQuery {
+  location?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  type?: string;
+  page?: string;
+  limit?: string;
+}
+
+
 export interface CreateReviewPayload {
   property_id: string;
   comment: string;

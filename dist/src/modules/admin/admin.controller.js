@@ -42,9 +42,21 @@ const getAllProperties = (0, catchAsync_1.catchAsync)(async (req, res, next) => 
         data: result,
     });
 });
+// get all rental requ
+const getAdminRentals = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const userId = req.user?.id;
+    const result = await admin_service_1.adminServices.getAdminRentalsService(userId);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "All rentals fetched successfully",
+        data: result,
+    });
+});
 exports.adminControllers = {
     getAlluser,
     getAllProperties,
-    updateUserById
+    updateUserById,
+    getAdminRentals
 };
 //# sourceMappingURL=admin.controller.js.map

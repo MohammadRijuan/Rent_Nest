@@ -31,6 +31,68 @@ const updateUserByIdService = async (payload, userId) => {
     });
     return user;
 };
+// get all rental request by admin
+const getAdminRentalsService = async (userId) => {
+    const user = await prisma_1.prisma.user.findUnique({
+        where: {
+            id: userId
+        }
+    });
+    if (!user || user.role !== "ADMIN") {
+        throw new Error("You are not eligible to access this resource");
+    }
+    const rentals = await prisma_1.prisma.rental.findMany({
+        orderBy: {
+            createdAt: "desc",
+        },
+        omit: {
+            tenant_id: true,
+            property_id: true,
+        },
+        include: {
+            tenant: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            },
+            property: {
+                select: {
+                    id: true,
+                    titles: true,
+                    location: true,
+                    rent: true,
+                    status: true,
+                    landlord: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                        },
+                    },
+                    category: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
+                },
+            },
+            payments: {
+                select: {
+                    id: true,
+                    transaction: true,
+                    amount: true,
+                    method: true,
+                    status: true,
+                    createdAt: true,
+                },
+            },
+        },
+    });
+    return rentals;
+};
 const getAllPropertiesService = async (query) => {
     const { location, minPrice, maxPrice, type, page = "1", limit = "10", } = query;
     const pageNumber = Number(page);
@@ -97,6 +159,7 @@ const getAllPropertiesService = async (query) => {
 exports.adminServices = {
     getAllUserService,
     getAllPropertiesService,
-    updateUserByIdService
+    updateUserByIdService,
+    getAdminRentalsService
 };
 //# sourceMappingURL=admin.service.js.map

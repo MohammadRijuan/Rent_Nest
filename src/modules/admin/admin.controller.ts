@@ -71,8 +71,27 @@ const getAllProperties = catchAsync(
 );
 
 
+// get all rental requ
+const getAdminRentals = catchAsync(
+  async (req: Request, res: Response) => {
+
+    const userId = req.user?.id
+
+    const result = await adminServices.getAdminRentalsService(userId as string);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "All rentals fetched successfully",
+      data: result,
+    });
+  },
+);
+
+
 export const adminControllers = {
     getAlluser,
     getAllProperties,
-    updateUserById
+    updateUserById,
+    getAdminRentals
 }

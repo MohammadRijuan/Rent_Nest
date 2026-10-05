@@ -2,6 +2,7 @@ import { prisma } from "../../lib/prisma";
 import type {
   AllRentalPayload,
   CreateReviewPayload,
+  IPropertyQuery,
   RentalPayload,
 } from "./getAll.interface";
 
@@ -41,14 +42,6 @@ const getAllCategoryService = async () => {
 
 // way of getting all property with filter including pagination
 
-interface IPropertyQuery {
-  location?: string;
-  minPrice?: string;
-  maxPrice?: string;
-  type?: string;
-  page?: string;
-  limit?: string;
-}
 
 const getAllPropertiesService = async (query: IPropertyQuery) => {
   const {
@@ -250,6 +243,71 @@ const getRentalsService = async () => {
   return allRentals;
 };
 
+
+// get rental by id
+const getRentalByIdService = async (rentalId: string) => {
+  const rental = await prisma.rental.findUnique({
+    where: {
+      id: rentalId,
+    },
+    omit: {
+      tenant_id: true,
+      property_id: true,
+    },
+    include: {
+      tenant: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+      property: {
+        select: {
+          id: true,
+          titles: true,
+          description: true,
+          location: true,
+          rent: true,
+          bedrooms: true,
+          bathrooms: true,
+          amenities: true,
+          status: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          landlord: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+      payments: {
+        select: {
+          id: true,
+          transaction: true,
+          amount: true,
+          method: true,
+          status: true,
+          createdAt: true,
+        },
+      },
+    },
+  });
+
+  if (!rental) {
+    throw new Error("Rental request not found");
+  }
+
+  return rental;
+};
+
 // create review
 const createReviewService = async (
   payload: CreateReviewPayload,
@@ -324,5 +382,6 @@ export const getAllServices = {
   getPropertyByIdService,
   createRentalService,
   getRentalsService,
+  getRentalByIdService,
   createReviewService,
 };

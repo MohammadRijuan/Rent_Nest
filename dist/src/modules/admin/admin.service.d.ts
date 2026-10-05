@@ -18,6 +18,44 @@ declare const updateUserByIdService: (payload: UpdateUser, userId: string) => Pr
     createdAt: Date;
     updatedAt: Date;
 }>;
+declare const getAdminRentalsService: (userId: string) => Promise<({
+    payments: {
+        amount: import("@prisma/client-runtime-utils").Decimal;
+        createdAt: Date;
+        id: string;
+        method: import("../../../generated/prisma/enums").Methods;
+        status: import("../../../generated/prisma/enums").PaymentStatus;
+        transaction: string | null;
+    }[];
+    property: {
+        category: {
+            id: string;
+            name: string;
+        };
+        id: string;
+        landlord: {
+            email: string;
+            id: string;
+            name: string;
+        };
+        location: string;
+        rent: import("@prisma/client-runtime-utils").Decimal;
+        status: import("../../../generated/prisma/enums").propertyStatus;
+        titles: string;
+    };
+    tenant: {
+        email: string;
+        id: string;
+        name: string;
+    };
+} & {
+    id: string;
+    move_in_date: Date;
+    message: string;
+    status: import("../../../generated/prisma/enums").RentalStatus;
+    createdAt: Date;
+    updatedAt: Date;
+})[]>;
 interface IPropertyQuery {
     location?: string;
     minPrice?: string;
@@ -57,6 +95,7 @@ export declare const adminServices: {
     getAllUserService: typeof getAllUserService;
     getAllPropertiesService: typeof getAllPropertiesService;
     updateUserByIdService: typeof updateUserByIdService;
+    getAdminRentalsService: typeof getAdminRentalsService;
 };
 export {};
 //# sourceMappingURL=admin.service.d.ts.map

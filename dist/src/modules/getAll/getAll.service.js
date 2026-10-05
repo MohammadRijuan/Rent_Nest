@@ -13,6 +13,24 @@ const getAllCategoryService = async () => {
     });
     return result;
 };
+// way of getting all property without filter
+// const getAllPropertiesService = async () => {
+//   const result = await prisma.property.findMany({
+//     orderBy: {
+//       createdAt: "desc",
+//     },
+//     include: {
+//       category: {
+//         select: {
+//           name: true,
+//         },
+//       },
+//     },
+//   });
+//   return result;
+// };
+// property get by id
+// way of getting all property with filter including pagination
 const getAllPropertiesService = async (query) => {
     const { location, minPrice, maxPrice, type, page = "1", limit = "10", } = query;
     const pageNumber = Number(page);
@@ -177,6 +195,67 @@ const getRentalsService = async () => {
     });
     return allRentals;
 };
+// get rental by id
+const getRentalByIdService = async (rentalId) => {
+    const rental = await prisma_1.prisma.rental.findUnique({
+        where: {
+            id: rentalId,
+        },
+        omit: {
+            tenant_id: true,
+            property_id: true,
+        },
+        include: {
+            tenant: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                },
+            },
+            property: {
+                select: {
+                    id: true,
+                    titles: true,
+                    description: true,
+                    location: true,
+                    rent: true,
+                    bedrooms: true,
+                    bathrooms: true,
+                    amenities: true,
+                    status: true,
+                    category: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
+                    landlord: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                        },
+                    },
+                },
+            },
+            payments: {
+                select: {
+                    id: true,
+                    transaction: true,
+                    amount: true,
+                    method: true,
+                    status: true,
+                    createdAt: true,
+                },
+            },
+        },
+    });
+    if (!rental) {
+        throw new Error("Rental request not found");
+    }
+    return rental;
+};
 // create review
 const createReviewService = async (payload, userId) => {
     const { property_id, comment } = payload;
@@ -241,6 +320,7 @@ exports.getAllServices = {
     getPropertyByIdService,
     createRentalService,
     getRentalsService,
+    getRentalByIdService,
     createReviewService,
 };
 //# sourceMappingURL=getAll.service.js.map

@@ -16,6 +16,8 @@ router.post("/rentals",authMiddleware(Role.TENANT), getAllControllers.createRent
 
 router.get("/rentals", getAllControllers.getRentals)
 
+router.get("/rentals/:id", getAllControllers.getRentalById);
+
 router.post("/reviews",authMiddleware(Role.TENANT), getAllControllers.createReview)
 
 

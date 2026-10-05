@@ -14,5 +14,11 @@ router.patch("/users/:id",authMiddleware(Role.ADMIN),adminControllers.updateUser
 
 router.get("/properties", authMiddleware(Role.ADMIN),adminControllers.getAllProperties)
 
+router.get(
+  "/rentals",
+  authMiddleware(Role.ADMIN),
+  adminControllers.getAdminRentals,
+);
+
 
 export const adminRoutes = router

@@ -115,6 +115,26 @@ const getRentals = catchAsync(
   },
 );
 
+// get rental by id
+const getRentalById = catchAsync(
+  async (req: Request, res: Response) => {
+
+    const rentalId = req.params.id
+    const result = await getAllServices.getRentalByIdService(
+      rentalId as string,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Rental fetched successfully",
+      data: result,
+    });
+  },
+);
+
+
+
 // create review
 const createReview = catchAsync(async (req: Request, res: Response) => {
 
@@ -140,5 +160,6 @@ export const getAllControllers = {
   getPropertyById,
   createRentals,
   getRentals,
-  createReview,
+  getRentalById,
+  createReview
 };

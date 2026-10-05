@@ -74,6 +74,17 @@ const getRentals = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
         data: allRentals,
     });
 });
+// get rental by id
+const getRentalById = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const rentalId = req.params.id;
+    const result = await getAll_service_1.getAllServices.getRentalByIdService(rentalId);
+    (0, sendResponse_1.sendResponse)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Rental fetched successfully",
+        data: result,
+    });
+});
 // create review
 const createReview = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const payload = req.body;
@@ -92,6 +103,7 @@ exports.getAllControllers = {
     getPropertyById,
     createRentals,
     getRentals,
-    createReview,
+    getRentalById,
+    createReview
 };
 //# sourceMappingURL=getAll.controller.js.map

@@ -5,6 +5,7 @@ export declare const getAllControllers: {
     getPropertyById: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     createRentals: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     getRentals: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+    getRentalById: (req: Request, res: Response, next: NextFunction) => Promise<void>;
     createReview: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 };
 //# sourceMappingURL=getAll.controller.d.ts.map

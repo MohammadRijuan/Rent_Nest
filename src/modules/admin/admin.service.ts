@@ -45,6 +45,76 @@ const updateUserByIdService = async(payload:UpdateUser,userId : string) =>{
 }
 
 
+// get all rental request by admin
+const getAdminRentalsService = async (userId :string) => {
+   
+  const user = await prisma.user.findUnique({
+    where:{
+      id :userId
+    }
+  })
+
+  if(!user || user.role !== "ADMIN"){
+    throw new Error("You are not eligible to access this resource")
+  }
+
+  const rentals = await prisma.rental.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    omit: {
+      tenant_id: true,
+      property_id: true,
+    },
+    include: {
+      tenant: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+
+      property: {
+        select: {
+          id: true,
+          titles: true,
+          location: true,
+          rent: true,
+          status: true,
+          landlord: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+
+      payments: {
+        select: {
+          id: true,
+          transaction: true,
+          amount: true,
+          method: true,
+          status: true,
+          createdAt: true,
+        },
+      },
+    },
+  });
+
+  return rentals;
+};
+
+
 
 // way of getting all property with filter including pagination
 
@@ -146,5 +216,6 @@ const getAllPropertiesService = async (query: IPropertyQuery) => {
 export const adminServices = {
   getAllUserService,
   getAllPropertiesService,
-  updateUserByIdService
+  updateUserByIdService,
+  getAdminRentalsService
 };
