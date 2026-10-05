@@ -1,1 +1,1 @@
-{"version":3,"file":"globalErrorHandler.d.ts","sourceRoot":"","sources":["../../../src/middlewares/globalErrorHandler.ts"],"names":[],"mappings":"AAAA,OAAO,KAAI,EAAE,YAAY,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAI9D,eAAO,MAAM,kBAAkB,QACxB,GAAG,OACH,OAAO,OACP,QAAQ,QACP,YAAY,SA+CnB,CAAC"}
+{"version":3,"file":"globalErrorHandler.d.ts","sourceRoot":"","sources":["../../../src/middlewares/globalErrorHandler.ts"],"names":[],"mappings":"AAAA,OAAO,KAAI,EAAE,YAAY,EAAE,OAAO,EAAE,QAAQ,EAAE,MAAM,SAAS,CAAC;AAK9D,eAAO,MAAM,kBAAkB,QACxB,GAAG,OACH,OAAO,OACP,QAAQ,QACP,YAAY,SA+CnB,CAAC"}
