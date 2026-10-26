@@ -14,10 +14,51 @@ const registerUser = catchAsync(async(req:Request,res:Response,next : NextFuncti
         message : "user registered successfully",
         statusCode:httpStatus.CREATED,
         data : {
-            user
+            user,
         }
     })
 })
+
+
+// register with access token
+
+// const registerUser = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const payload = req.body;
+
+//     // Call the registration service only once
+//     const { user, accessToken, refreshToken } =
+//       await authServices.registerUserService(payload);
+
+//     res.cookie("accessToken", accessToken, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       sameSite: "lax",
+//       path: "/",
+//       maxAge: 1000 * 60 * 60 * 24,
+//     });
+
+//     res.cookie("refreshToken", refreshToken, {
+//       httpOnly: true,
+//       secure: process.env.NODE_ENV === "production",
+//       sameSite: "lax",
+//       path: "/",
+//       maxAge: 1000 * 60 * 60 * 24 * 7,
+//     });
+
+//     sendResponse(res, {
+//       success: true,
+//       message: "User registered successfully",
+//       statusCode: httpStatus.CREATED,
+//       data: {
+//         user,
+//         accessToken,
+//         refreshToken,
+//       },
+//     });
+//   }
+// );
+
 
 
 const loginUser = catchAsync(async(req:Request,res:Response,next : NextFunction)=>{

@@ -1,22 +1,24 @@
 import type { ILoginUserPayload, RegisterUserPayload } from "./auth.interface";
-declare const registerUserService: (payload: RegisterUserPayload) => Promise<({
-    profile: {
+declare const registerUserService: (payload: RegisterUserPayload) => Promise<{
+    user: ({
+        profile: {
+            id: string;
+            profilePhoto: string | null;
+            bio: string | null;
+            userId: string;
+            createdAt: Date;
+            updatedAt: Date;
+        } | null;
+    } & {
         id: string;
-        profilePhoto: string | null;
-        bio: string | null;
-        userId: string;
+        name: string;
+        email: string;
+        activeStatus: import("../../../generated/prisma/enums").ActiveStatus;
+        role: import("../../../generated/prisma/enums").Role;
         createdAt: Date;
         updatedAt: Date;
-    } | null;
-} & {
-    id: string;
-    name: string;
-    email: string;
-    activeStatus: import("../../../generated/prisma/enums").ActiveStatus;
-    role: import("../../../generated/prisma/enums").Role;
-    createdAt: Date;
-    updatedAt: Date;
-}) | null>;
+    }) | null;
+}>;
 declare const loginUserService: (payload: ILoginUserPayload) => Promise<{
     accessToken: string;
     refreshToken: string;
