@@ -34,11 +34,17 @@ const createPayment = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
 //   },
 // );
 const confirmPayment = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    const result = await payment_service_1.paymentsServices.confirmPaymentService(req.body);
-    if (result.status === "SUCCESS") {
-        return res.redirect(`${config_1.default.frontend_url}/payment/success`);
+    try {
+        const result = await payment_service_1.paymentsServices.confirmPaymentService(req.body);
+        if (result.status === "SUCCESS") {
+            return res.redirect(`${config_1.default.frontend_url}/payment/success`);
+        }
+        return res.redirect(`${config_1.default.frontend_url}/payment/cancel`);
     }
-    return res.redirect(`${config_1.default.frontend_url}/payment/cancel`);
+    catch (error) {
+        console.error("Payment confirmation failed:", error);
+        return res.redirect(`${config_1.default.frontend_url}/payment/cancel`);
+    }
 });
 const getPayments = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const userId = req.user?.id;

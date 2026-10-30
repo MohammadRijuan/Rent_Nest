@@ -43,17 +43,19 @@ const createPayment = catchAsync(
 
 
 const confirmPayment = catchAsync(async (req, res) => {
-  const result = await paymentsServices.confirmPaymentService(req.body);
+  try {
+    const result = await paymentsServices.confirmPaymentService(req.body);
 
-  if (result.status === "SUCCESS") {
-    return res.redirect(
-      `${config.frontend_url}/payment/success`
-    );
+    if (result.status === "SUCCESS") {
+      return res.redirect(`${config.frontend_url}/payment/success`);
+    }
+
+    return res.redirect(`${config.frontend_url}/payment/cancel`);
+  } catch (error) {
+    console.error("Payment confirmation failed:", error);
+
+    return res.redirect(`${config.frontend_url}/payment/cancel`);
   }
-
-  return res.redirect(
-    `${config.frontend_url}/payment/cancel`
-  );
 });
 
 
