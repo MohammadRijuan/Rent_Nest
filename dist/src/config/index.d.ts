@@ -1,6 +1,7 @@
 declare const _default: {
     port: number;
     app_url: string | undefined;
+    frontend_url: string | undefined;
     database_url: string | undefined;
     bcrypt_salt_rounds: string | undefined;
     jwt_access_secret: string;

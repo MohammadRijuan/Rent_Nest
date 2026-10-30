@@ -47,12 +47,12 @@ const confirmPayment = catchAsync(async (req, res) => {
 
   if (result.status === "SUCCESS") {
     return res.redirect(
-      `${config.app_url}/payment/success`
+      `${config.frontend_url}/payment/success`
     );
   }
 
   return res.redirect(
-    `${config.app_url}/payment/cancel`
+    `${config.frontend_url}/payment/cancel`
   );
 });
 

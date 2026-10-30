@@ -8,6 +8,7 @@ const catchAsync_1 = require("../../utils/catchAsync");
 const payment_service_1 = require("./payment.service");
 const sendResponse_1 = require("../../utils/sendResponse");
 const http_status_1 = __importDefault(require("http-status"));
+const config_1 = __importDefault(require("../../config"));
 const createPayment = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const result = await payment_service_1.paymentsServices.createPaymentService(req.body, req.user.id);
     (0, sendResponse_1.sendResponse)(res, {
@@ -17,18 +18,27 @@ const createPayment = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
         data: result,
     });
 });
-const confirmPayment = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
-    // for checking the val_id
-    // console.log("===== SSLCOMMERZ CALLBACK =====");
-    // console.log(req.body);
-    const payload = req.body;
-    const result = await payment_service_1.paymentsServices.confirmPaymentService(payload);
-    (0, sendResponse_1.sendResponse)(res, {
-        success: true,
-        statusCode: http_status_1.default.OK,
-        message: "Payment confirmed successfully",
-        data: result,
-    });
+// const confirmPayment = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     // for checking the val_id
+//     // console.log("===== SSLCOMMERZ CALLBACK =====");
+//     // console.log(req.body);
+//     const payload = req.body;
+//     const result = await paymentsServices.confirmPaymentService(payload);
+//     sendResponse(res, {
+//       success: true,
+//       statusCode: httpStatus.OK,
+//       message: "Payment confirmed successfully",
+//       data: result,
+//     });
+//   },
+// );
+const confirmPayment = (0, catchAsync_1.catchAsync)(async (req, res) => {
+    const result = await payment_service_1.paymentsServices.confirmPaymentService(req.body);
+    if (result.status === "SUCCESS") {
+        return res.redirect(`${config_1.default.frontend_url}/payment/success`);
+    }
+    return res.redirect(`${config_1.default.frontend_url}/payment/cancel`);
 });
 const getPayments = (0, catchAsync_1.catchAsync)(async (req, res, next) => {
     const userId = req.user?.id;
