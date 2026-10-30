@@ -3,6 +3,7 @@ import { catchAsync } from "../../utils/catchAsync";
 import { paymentsServices } from "./payment.service";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
+import config from "../../config";
 
 const createPayment = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -20,25 +21,41 @@ const createPayment = catchAsync(
   },
 );
 
-const confirmPayment = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+// const confirmPayment = catchAsync(
+//   async (req: Request, res: Response, next: NextFunction) => {
     
-    // for checking the val_id
-    // console.log("===== SSLCOMMERZ CALLBACK =====");
-    // console.log(req.body);
+//     // for checking the val_id
+//     // console.log("===== SSLCOMMERZ CALLBACK =====");
+//     // console.log(req.body);
 
-    const payload = req.body;
+//     const payload = req.body;
 
-    const result = await paymentsServices.confirmPaymentService(payload);
+//     const result = await paymentsServices.confirmPaymentService(payload);
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: "Payment confirmed successfully",
-      data: result,
-    });
-  },
-);
+//     sendResponse(res, {
+//       success: true,
+//       statusCode: httpStatus.OK,
+//       message: "Payment confirmed successfully",
+//       data: result,
+//     });
+//   },
+// );
+
+
+const confirmPayment = catchAsync(async (req, res) => {
+  const result = await paymentsServices.confirmPaymentService(req.body);
+
+  if (result.status === "SUCCESS") {
+    return res.redirect(
+      `${config.app_url}/payment/success`
+    );
+  }
+
+  return res.redirect(
+    `${config.app_url}/payment/cancel`
+  );
+});
+
 
 const getPayments = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
